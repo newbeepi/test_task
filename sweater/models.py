@@ -9,6 +9,9 @@ class Item(db.Model):
     name = db.Column(db.String(40), nullable=False)
     address = db.relationship('Node', uselist=False, backref=db.backref('item'))
 
+    def __repr__(self):
+        return self.name
+
 
 roles_users = db.Table(
     'roles_users',
@@ -51,18 +54,14 @@ class Node(db.Model):
     type = db.Column(db.String(80))
     number = db.Column(db.String(20))
     item_id = db.Column(db.Integer, db.ForeignKey('item.item_id'), default=None)
-
-    def higher_neighbors(self):
-        return [x.higher_adress for x in self.lower_edges]
-
-    def lower_neighbors(self):
-        return [x.lower_adress for x in self.higher_edges]
+    father_id = db.Column(db.Integer, db.ForeignKey('Node.node_id'))
+    father_node = db.relationship('Node', remote_side=[node_id], uselist=False)
 
     def to_highest_node(self):
         x = self
         res = []
-        while lower_edges := x.lower_edges:
-            x = lower_edges[0].higher_adress
+        while father := x.father_node:
+            x = father
             res += [x]
         return res
 
@@ -71,20 +70,20 @@ class Node(db.Model):
         return ' '.join(x.type + ' ' + x.number for x in res)
 
 
-
-class Edge(db.Model):
-
-    lower_id = db.Column(db.Integer, db.ForeignKey('Node.node_id'), primary_key=True)
-    higher_id = db.Column(db.Integer, db.ForeignKey('Node.node_id'), primary_key=True)
-
-    lower_adress = db.relationship(
-        'Node', backref=db.backref('lower_edges'), primaryjoin=lower_id == Node.node_id
-    )
-
-    higher_adress = db.relationship(
-        'Node', backref=db.backref('higher_edges'), primaryjoin=higher_id == Node.node_id
-    )
-
-    def __init__(self, lower_node, higher_node):
-        self.lower_adress = lower_node
-        self.higher_adress = higher_node
+#
+# class Edge(db.Model):
+#
+#     lower_id = db.Column(db.Integer, db.ForeignKey('Node.node_id'), primary_key=True)
+#     higher_id = db.Column(db.Integer, db.ForeignKey('Node.node_id'), primary_key=True)
+#
+#     lower_adress = db.relationship(
+#         'Node', backref=db.backref('lower_edges'), primaryjoin=lower_id == Node.node_id
+#     )
+#
+#     higher_adress = db.relationship(
+#         'Node', backref=db.backref('higher_edges'), primaryjoin=higher_id == Node.node_id
+#     )
+#
+#     def __init__(self, lower_node, higher_node):
+#         self.lower_adress = lower_node
+#         self.higher_adress = higher_node

@@ -1,6 +1,6 @@
 from sweater import app, db, admin
-from sweater.AdminViews import UserView, AdminView
-from sweater.models import User, Role, Item, Node, Edge
+from sweater.adminviews import UserView, AdminView
+from sweater.models import User, Role, Item, Node# , Edge
 import sweater.routes
 
 from flask_security import Security, SQLAlchemyUserDatastore, hash_password
@@ -27,7 +27,7 @@ security = Security(app, user_datastore)
 
 admin.add_view(UserView(Item, db.session))
 admin.add_view(UserView(Node, db.session))
-admin.add_view(UserView(Edge, db.session))
+#admin.add_view(UserView(Edge, db.session))
 admin.add_view(UserView(User, db.session))
 admin.add_view(AdminView(Role, db.session))
 

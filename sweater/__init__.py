@@ -13,7 +13,7 @@ app.config['SECURITY_PASSWORD_SALT'] = "123948130912838129031290"
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_pre_ping": True,
 }
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test4.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test6.db'
 
 db = SQLAlchemy(app)
 fsqla.FsModels.set_db_info(db)
